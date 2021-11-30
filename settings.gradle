@@ -1,0 +1,4 @@
+include ':hannotation'
+include ':hannoplugin'
+include ':app'
+rootProject.name = "Hanno"

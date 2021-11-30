@@ -1,0 +1,18 @@
+[
+  {
+    "attachName": "hannotation",
+    "name": "hannotation",
+    "path": "hannotation",
+    "components": [
+      "hannotation"
+    ]
+  },
+  {
+    "attachName": "hannoPlugin",
+    "name": "hannoPlugin",
+    "path": "hannoPlugin",
+    "components": [
+      "hannoPlugin"
+    ]
+  }
+]
