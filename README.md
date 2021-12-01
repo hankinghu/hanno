@@ -136,6 +136,13 @@ classpath "com.hanking.hanno:hannoPlugin:0.0.1-alpha.0"
 在module中添加
 apply plugin: 'com.hanking.hanno'
 implementation "com.hanking.hanno:hannotation:0.0.1-alpha.0"
+默认情况下添加HannoLog之后会进行asm插装，也可以通过在module的build.gradle文件中添加以下配置使在编译时不执行字节码插装提高编译速度
+```java
+apply plugin: 'com.hanking.hanno'
+hannoExtension{
+enable=false
+}
+```
 # Asm原理
 1、ASM简介
 一个.java文件经过Java编译器（javac）编译之后会生成一个.class文件。 在.class文件中，存储的是字节码（ByteCode）数据，如下图所示。

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
-  <info organisation="com.hanking.hanno" module="hannoplugin" revision="1.1.3" status="integration" publication="20211130145247"/>
+  <info organisation="com.hanking.hanno" module="hannoplugin" revision="1.1.3" status="integration" publication="20211201145106"/>
   <configurations>
     <conf name="annotationProcessor" visibility="private"/>
     <conf name="api" visibility="private" extends="compile"/>
     <conf name="apiElements" visibility="private" extends="api,runtime"/>
     <conf name="archives" visibility="public"/>
-    <conf name="bitsDependA" visibility="public" transitive="false"/>
-    <conf name="bitsDependSo" visibility="public" transitive="false"/>
     <conf name="compile" visibility="private"/>
     <conf name="compileClasspath" visibility="private" extends="compileOnly,implementation"/>
     <conf name="compileOnly" visibility="private"/>

@@ -4,6 +4,7 @@
 -notimestamp 
 -quiet 
 -windowtitle 'hannoplugin 1.1.3 API'
+'/Users/hanking/AndroidStudioProjects/Honno/hannoplugin/src/main/java/com/hanking/extension/HannoExtension.java'
 '/Users/hanking/AndroidStudioProjects/Honno/hannoplugin/src/main/java/com/hanking/plugin/FieldInfo.java'
 '/Users/hanking/AndroidStudioProjects/Honno/hannoplugin/src/main/java/com/hanking/plugin/HannoPlugin.java'
 '/Users/hanking/AndroidStudioProjects/Honno/hannoplugin/src/main/java/com/hanking/plugin/HannoClassVisitor.java'
