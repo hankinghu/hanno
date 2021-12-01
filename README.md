@@ -136,11 +136,14 @@ classpath "com.hanking.hanno:hannoPlugin:0.0.1-alpha.0"
 在module中添加
 apply plugin: 'com.hanking.hanno'
 implementation "com.hanking.hanno:hannotation:0.0.1-alpha.0"
+
+# 是否开启plugin 和打印执行plugin的log
 默认情况下添加HannoLog之后会进行asm插装，也可以通过在module的build.gradle文件中添加以下配置使在编译时不执行字节码插装提高编译速度
 ```java
 apply plugin: 'com.hanking.hanno'
 hannoExtension{
-enable=false
+ enable=false
+ openLog=false
 }
 ```
 # Asm原理
