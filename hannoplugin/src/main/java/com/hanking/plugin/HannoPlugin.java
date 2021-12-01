@@ -1,6 +1,7 @@
 package com.hanking.plugin;
 
 import com.android.build.gradle.AppExtension;
+import com.android.ddmlib.Log;
 import com.hanking.extension.HannoExtension;
 import com.hanking.utils.LogHelper;
 
@@ -19,7 +20,8 @@ public class HannoPlugin implements Plugin<Project> {
         LogHelper.log("trace plugin start " + project.getName());
         HannoExtension hannoExtension = project.getExtensions().create("hannoExtension", HannoExtension.class);
         //拿到这个extension
-        LogHelper.log("hannoExtension enable " + hannoExtension.isEnable());
+        LogHelper.log("hannoExtension enable " + hannoExtension.isEnable() + " openLog " + hannoExtension.isOpenLog());
+        LogHelper.setOpenLog(hannoExtension.isOpenLog());
         if (hannoExtension.isEnable()) {
             project.getExtensions().findByType(AppExtension.class)
                     .registerTransform(new HannoTransform());

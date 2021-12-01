@@ -15,10 +15,20 @@ package com.hanking.extension;
  */
 public class HannoExtension {
     //控制是否使用Hanno
-    boolean enable = true;
+    boolean enable = false;
+    //控制是否打印log
+    boolean openLog = true;
 
     public boolean isEnable() {
         return enable;
+    }
+
+    public boolean isOpenLog() {
+        return openLog;
+    }
+
+    public void setOpenLog(boolean openLog) {
+        this.openLog = openLog;
     }
 
     public void setEnable(boolean enable) {
