@@ -9,9 +9,53 @@ _    _
 ```
 通过字节码插件实现注解打印log，注解可以加在类上面，也可以加在方法上面，当加在类上面时会打印全部方法的log，当加在方法上面时打印当前方法的log
 
-# HannoLog
-这个注解用来添加在类或者方法上，注解可以设置log的级别，是否打印方法运行时间，已经log的Tag名称
+# 使用方法
+1、给类中所有的方法加上log
+```java
+@HannoLog
+class MainActivity : AppCompatActivity() {
+   // ...
+}
+```
+会打印出类中所有方法的log
 
+2、给类中的某些方法加log
+```java
+class MainActivity : AppCompatActivity() {
+    @HannoLog(level = Log.INFO, enableTime = false,watchField=true)
+    private fun test(a: Int = 3, b: String = "good"): Int {
+        return a + 1
+    }
+}
+```
+会打印当前方法的log
+3、打印的log
+```java
+//D/MainActivity: ┌───────────────────────────────────------───────────────────────────────────------
+//D/MainActivity: │ method: onCreate(android.os.Bundle)
+//D/MainActivity: │ params: [{name='savedInstanceState', value=null}]
+//D/MainActivity: │ time: 22ms
+//D/MainActivity: │ fields: {name='a', value=3}{name='b', value=false}{name='c', value=ccc}
+//D/MainActivity: │ thread: main
+//D/MainActivity: └───────────────────────────────────------───────────────────────────────────------
+```
+其中method是当前方法名，params是方法的参数名和值，time方法的执行时间，fields是当前对象的fields值，thread当前方法执行的线程。
+# HannoLog参数解释
+
+可以通过level来设置log的级别，level的设置可以调用Log里面的INFO，DEBUG，ERROR等。enableTime用来设置是否打印方法执行的时间，默认是false，如果要打印设置enableTime=true.
+tagName用于设置log的名称，默认是当前类名，也可以通过这个方法进行设置。
+
+1、level控制log打印的等级，默认是log.d,可以通过@HannoLog(level = Log.INFO)来设置等级，支持Log.DEBUG，Log.ERROR等。
+
+2、enableTime控制是否输出方法的执行时间，默认是false，如果要打印可以通过@HannoLog(enableTime=true)来设置。
+
+3、tagName设置tag的名称，默认是当前类名，也可以通过    @HannoLog(tagName = "test")来设置。
+
+4、watchField用于观察对象中的field值，通过@HannoLog(watchField = true)设置，由于静态方法中不能调用非静态的field所以这个参数在静态方法上统一不生效。
+
+# 重要的类
+1、HannoLog
+HannoLog是注解类，里面提供了控制参数。对应上面的HannoLog参数解释
 
  ```java
 /**
@@ -43,94 +87,43 @@ public @interface HannoLog {
     boolean watchField() default false;
 }
 ```
-# 使用方法
-1、注解添加在方法上面，所有添加注解的方法会打印log
-```java
-class MainActivity : AppCompatActivity() {
+2、HannoExtension
+ ```java
+public class HannoExtension {
+//控制是否使用Hanno
+boolean enable;
+//控制是否打印log
+boolean openLog = true;
 
-    @HannoLog(level = Log.DEBUG, enableTime = true)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        test()
+    public boolean isEnableModule() {
+        return enableModule;
     }
 
-    @HannoLog(tagName = "test")
-    override fun onResume() {
-        super.onResume()
+    public void setEnableModule(boolean enableModule) {
+        this.enableModule = enableModule;
     }
 
-    @HannoLog(level = Log.INFO, enableTime = false)
-    private fun test(a: Int = 3, b: String = "good"): Int {
-        return a + 1
+    //设置这个值为true可以给整个module的方法增加log
+    boolean enableModule = false;
+
+    public boolean isEnable() {
+        return enable;
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-}
-
-```
-打印的log内容如下：
-```java
- //D/test: ┌───────────────────────────────────------───────────────────────────────────------
- //D/test: │ method: onResume()
- //D/test: │ fields: {name='a', value=3}{name='b', value=false}{name='c', value=ccc}
- //D/test: │ thread: main
- //D/test: └───────────────────────────────────------───────────────────────────────────------
-
- //D/MainActivity: ┌───────────────────────────────────------───────────────────────────────────------
- //D/MainActivity: │ method: onCreate(android.os.Bundle)
- //D/MainActivity: │ params: [{name='savedInstanceState', value=null}]
- //D/MainActivity: │ time: 22ms
- //D/MainActivity: │ fields: {name='a', value=3}{name='b', value=false}{name='c', value=ccc}
- //D/MainActivity: │ thread: main
- //D/MainActivity: └───────────────────────────────────------───────────────────────────────────------
-
-```
-
-# HannoLog参数解释
-可以通过level来设置log的级别，level的设置可以调用Log里面的INFO，DEBUG，ERROR等。enableTime用来设置是否打印方法执行的时间，默认是false，如果要打印设置enableTime=true.
-tagName用于设置log的名称，默认是当前类名，也可以通过这个方法进行设置。
-1、level控制log打印的等级，默认是log.d,可以通过@HannoLog(level = Log.INFO)来设置等级，支持Log.DEBUG，Log.ERROR等。
-
-2、enableTime控制是否输出方法的执行时间，默认是false，如果要打印可以通过@HannoLog(enableTime=true)来设置。
-
-3、tagName设置tag的名称，默认是当前类名，也可以通过    @HannoLog(tagName = "test")来设置。
-
-4、watchField用于观察对象中的field值，通过@HannoLog(watchField = true)设置，由于静态方法中不能调用非静态的field所以这个参数在静态方法上统一不生效。
-
-
-2、注解添加在类上面
-```java
-@HannoLog
-class MainActivity : AppCompatActivity() {
-
-    @HannoLog(level = Log.DEBUG, enableTime = true)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        test()
+    public boolean isOpenLog() {
+        return openLog;
     }
 
-    @HannoLog(tagName = "test")
-    override fun onResume() {
-        super.onResume()
+    public void setOpenLog(boolean openLog) {
+        this.openLog = openLog;
     }
 
-    @HannoLog(level = Log.INFO, watchField = true)
-    private fun test(a: Int = 3, b: String = "good"): Int {
-        return a + 1
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 }
 ```
-类中所有的方法都会打印出log
-
-# 是否开启plugin 和打印执行plugin的log
+HannoExtension提供gradle.build文件是否开启plugin 和打印执行plugin的log
 默认情况下添加HannoLog之后会进行asm插装，也可以通过在module的build.gradle文件中添加以下配置使在编译时不执行字节码插装提高编译速度
 ```java
 apply plugin: 'com.hanking.hanno'
@@ -139,57 +132,9 @@ hannoExtension{
  openLog=false
 }
 ```
-# Asm原理
-1、ASM简介
-一个.java文件经过Java编译器（javac）编译之后会生成一个.class文件。 在.class文件中，存储的是字节码（ByteCode）数据，如下图所示。
+# 工具调试类
 
-![图片](https://github.com/hankinghu/hanno/raw/master/pic/asm1.png)
-
-
-ASM所的操作对象是是字节码（ByteCode）的类库。ASM处理字节码（ByteCode）数据的思路是这样的：第一步，将.class文件拆分成多个部分；第二步，对某一个部分的信息进行修改；第三步，将多个部分重新组织成一个新的.class文件。
-
-ClassFile
-```java
-ClassFile {
-u4             magic;
-u2             minor_version;
-u2             major_version;
-u2             constant_pool_count;
-cp_info        constant_pool[constant_pool_count-1];
-u2             access_flags;
-u2             this_class;
-u2             super_class;
-u2             interfaces_count;
-u2             interfaces[interfaces_count];
-u2             fields_count;
-field_info     fields[fields_count];
-u2             methods_count;
-method_info    methods[methods_count];
-u2             attributes_count;
-attribute_info attributes[attributes_count];
-}
-```
-字节码的类库和ClassFile之间关系
-
-![图片](https://github.com/hankinghu/hanno/raw/master/pic/asm2.png)
-
-
-ASM能够做什么
-
-![图片](https://github.com/hankinghu/hanno/raw/master/pic/asm3.png)
-
-asm的组成
-从组成结构上来说，ASM分成两部分，一部分为Core API，另一部分为Tree API。
-- 其中，Core API包括asm.jar、asm-util.jar和asm-commons.jar；
-- 其中，Tree API包括asm-tree.jar和asm-analysis.jar。
-
-  ![图片](https://github.com/hankinghu/hanno/raw/master/pic/asm4.png)
-
-asm中比较重要的类
-
-![图片](https://github.com/hankinghu/hanno/raw/master/pic/asm5.png)
-
-# ASM打印工具类 ASMPrint
+1、ASM打印工具类 ASMPrint
 ```java
 public class ASMPrint {
     
@@ -208,54 +153,14 @@ public class ASMPrint {
 ```
 通过ASMPrint类可以打印出class的asm代码，方便在Android studio中使用ByteCodeOutLine时出现问题。
 
-# 基础方法
-1、获取对象中的field值
-```java
-mv.visitVarInsn(ALOAD, 0);
-mv.visitFieldInsn(GETFIELD, className, info.name, info.descriptor);
-//进行一下装箱操作，不然会包类型转换错误
-box(info.type);
-```
-2、通过type获取opcode值
-```java
-/**
-* 获取opcode
-*
-* @return 返回load opcode
-*/
-    public int getLoadCode() {
-         return type.getOpcode(Opcodes.ILOAD);
-    }
-
-    /**
-     * @return 返回store opcode
-     */
-    public int getStoreCode() {
-        return type.getOpcode(Opcodes.ISTORE);
-    }
-```
-# 调试技巧
-1、查看class的字节码
-```java
-javap -c PrintField.class
-```
 2、查看complied class
+
 运行字节码插桩工具后，可以在app/build/intermediates/transforms/目录下找到生成的class，但是class中的内容由于是compiled看不到，可以使用cfr工具支持反编译class文件和jar包
 下载cfr的jar包，地址https://www.benf.org/other/cfr/,放到电脑的目录下，然后调用下面的命令就可以了
- 反编译class文件：命令
+反编译class文件：命令
 java -jar  /Users/hanking/AndroidStudioProjects/Honno/cfr/cfr-0.151.jar  MainActivity.class
-```java
-public MainActivity() {
-int n = LogCache.request();
-long l = System.currentTimeMillis();
-LogCache.updateMethodInfo(null, (String)"com/hank/hanno/MainActivity", (String)"<init>", (String)"()V", (long)l, (int)n);
-LogCache.printMethodInfo((int)n, (int)3, (boolean)false, (String)"");
-}
-```
-反编译jar包：命令
-java -jar /Users/hanking/AndroidStudioProjects/Honno/cfr/cfr-0.151.jar --outputdir /tmp/outputdir
 
-# 插桩之后生成的代码
+插桩后生成的代码
 ```java
     @HannoLog(tagName="test", watchField=true)
     protected void onResume() {
@@ -269,70 +174,5 @@ java -jar /Users/hanking/AndroidStudioProjects/Honno/cfr/cfr-0.151.jar --outputd
         LogCache.printMethodInfo((int)n, (int)3, (boolean)false, (String)"test");
     }
 ```
-# LogCache类
-用于保存插桩过程中生成的数据，和相应的打印log的方法。
-```java
-/**
-* create by 胡汉君
-* date 2021/11/23 11：06
-* 用来处理log的工具类
-  */
-  public class LogCache {
-  /**
-    * 方法缓存默认大小
-      */
-      private static final int INIT_CACHE_SIZE = 1024;
-      /**
-    * 方法名缓存
-      */
-      private static Vector<MethodInfo> mCacheMethods = new Vector<>(INIT_CACHE_SIZE);
-      private static Vector<FieldInfoN> mCacheFields = new Vector<>(20);
-
-  /**
-    * 占位并生成方法ID
-    *
-    * @return 返回 方法 Id
-      */
-      public static int request() {
-      mCacheMethods.add(new MethodInfo());
-      return mCacheMethods.size() - 1;
-      }
-
-  public static void addMethodArgument(Object argument, int id, String name) {
-  MethodInfo methodInfo = mCacheMethods.get(id);
-  methodInfo.addArgument(new MethodInfo.AgNode(name, argument));
-  }
-
-  public static void updateMethodInfo(Object result, String className, String methodName, String methodDesc, long startTime, int id) {
-  MethodInfo methodInfo = mCacheMethods.get(id);
-  methodInfo.setCost((System.currentTimeMillis() - startTime));
-  methodInfo.setResult(result);
-  methodInfo.setMethodDesc(methodDesc);
-  methodInfo.setClassName(className);
-  methodInfo.setMethodName(methodName);
-  }
-
-  public static synchronized void printMethodInfo(int id, int logLevel, boolean enableTime, String tagName) {
-  MethodInfo methodInfo = mCacheMethods.get(id);
-  Printer.printMethodInfo(methodInfo, logLevel, enableTime, tagName, mCacheFields);
-  }
-
-  /**
-    * @param fieldValues field值
-    *                    设置field的值
-    *                    以及field名称
-  */
-  public static void setFieldValues(Object fieldValues, String name, String descriptor) {
-  //如果field值没有变化则不加,防止添加多了field
-  FieldInfoN infoN=new FieldInfoN(descriptor, name, fieldValues);
-  if (!mCacheFields.contains(infoN)) {
-  mCacheFields.add(new FieldInfoN(descriptor, name, fieldValues));
-  }
-  }
-
-}
-```
-# 增加打印variable的名称
- 通过两次遍历打印variable的值
- 
-# 增加控制整个module打印log的能力
+# 实现原理
+asm字节码原理
