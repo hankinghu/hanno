@@ -14,8 +14,7 @@ public class FieldInfoN {
     @Override
     public String toString() {
         return "{" +
-                "descriptor='" + descriptor + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", value=" + value +
                 '}';
     }

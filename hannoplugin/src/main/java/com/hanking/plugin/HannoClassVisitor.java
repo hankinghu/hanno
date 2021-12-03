@@ -7,8 +7,11 @@ import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.MethodNode;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 /**
@@ -50,7 +53,7 @@ public class HannoClassVisitor extends ClassVisitor {
 
     @Override
     public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-        LogHelper.log("visitAnnotation descriptor " + descriptor + " visible " + visible);
+//        LogHelper.log("visitAnnotation descriptor " + descriptor + " visible " + visible);
         //获取类上的annotation，如果有类上的annotation，那么给每一个方法生成一个log
         //如果有cnLog那么其他的方法上的log就不再处理
         if (descriptor.equals(CN_LOG)) {
@@ -64,7 +67,7 @@ public class HannoClassVisitor extends ClassVisitor {
     public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
         Type type = Type.getType(descriptor);
         //判断是否是静态方法，如果是静态方法则不能去获取类中非field的值，如果不是静态方法则可以获取field的值
-        LogHelper.log(" visit visitField access " + access + " name " + name + " descriptor " + descriptor + " signature " + signature + " value " + value + " type " + type);
+//        LogHelper.log(" visit visitField access " + access + " name " + name + " descriptor " + descriptor + " signature " + signature + " value " + value + " type " + type);
         //用fieldInfo将当前的field存放起来
         fieldInfos.add(new FieldInfo(descriptor, access, type, name));
         return super.visitField(access, name, descriptor, signature, value);

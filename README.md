@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    @HannoLog(level = Log.INFO, enableTime = false)
+    @HannoLog(level = Log.INFO, watchField = true)
     private fun test(a: Int = 3, b: String = "good"): Int {
         return a + 1
     }
@@ -339,3 +339,7 @@ java -jar /Users/hanking/AndroidStudioProjects/Honno/cfr/cfr-0.151.jar --outputd
 
 }
 ```
+# 增加打印variable的名称
+ 通过两次遍历打印variable的值
+ 
+# 增加控制整个module打印log的能力

@@ -2,4 +2,11 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="com.itcodebox.notebooks.projectservice.ProjectUIState">
+    <option name="chapterPaneVisible" value="true" />
+    <option name="notePaneVisible" value="true" />
+    <option name="selectedNotebookId" value="1" />
+    <option name="selectedChapterId" value="1" />
+    <option name="selectedNoteId" value="2" />
+  </component>
 </project>

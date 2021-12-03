@@ -15,9 +15,20 @@ package com.hanking.extension;
  */
 public class HannoExtension {
     //控制是否使用Hanno
-    boolean enable = false;
+    boolean enable;
     //控制是否打印log
     boolean openLog = true;
+
+    public boolean isEnableModule() {
+        return enableModule;
+    }
+
+    public void setEnableModule(boolean enableModule) {
+        this.enableModule = enableModule;
+    }
+
+    //设置这个值为true可以给整个module的方法增加log
+    boolean enableModule = false;
 
     public boolean isEnable() {
         return enable;

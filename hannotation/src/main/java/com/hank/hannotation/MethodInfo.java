@@ -137,7 +137,8 @@ public class MethodInfo {
         @Override
         public String toString() {
             return "{" +
-                    "value=" + value +
+                    "name='" + name + '\'' +
+                    ", value=" + value +
                     '}';
         }
     }

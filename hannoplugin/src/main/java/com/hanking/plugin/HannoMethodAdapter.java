@@ -1,20 +1,24 @@
 package com.hanking.plugin;
 
-/**
- * create by 胡汉君
- * date 2021/11/24 14：05
- */
+
+import static com.hanking.plugin.Constants.ANNOTATION_NAME;
+import static com.hanking.plugin.Constants.LOG_CACHE_NAME;
 
 import com.hanking.utils.LogHelper;
+import com.hanking.utils.VariableCache;
+import com.hanking.utils.VariableEntry;
 
 import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.util.Vector;
+/**
+ * create by 胡汉君
+ * date 2021/11/24 14：05
+ */
 
 /**
  * 用于判断方法进入和方法退出,静态内部类，可以获取外部类的变量
@@ -23,13 +27,9 @@ class HannoMethodAdapter extends AdviceAdapter {
     private boolean hasTraceLog = false;
     private final String methodName;
     private int methodId;
-    private static final String LOG_CACHE_NAME = "com/hank/hannotation/LogCache";
-    private static final String ANNOTATION_NAME = "Lcom/hank/hannotation/HannoLog;";
     private final boolean isStaticMethod;
     private int startTimeId;
     private final Type[] argumentArrays;
-    //方法的参数名称列表
-    private final String[] argumentNames;
     private final String desc;
     private int level = 3;
     private boolean enableTime = false;
@@ -45,7 +45,6 @@ class HannoMethodAdapter extends AdviceAdapter {
         this.desc = descriptor;
         argumentArrays = Type.getArgumentTypes(desc);
         //定义一下方法的名称列表长度
-        argumentNames = new String[argumentArrays.length];
         isStaticMethod = ((access & Opcodes.ACC_STATIC) != 0);
         this.className = className;
         this.logAll = logAll;
@@ -53,24 +52,11 @@ class HannoMethodAdapter extends AdviceAdapter {
     }
 
     @Override
-    public void visitLocalVariable(String name, String descriptor, String signature, Label start, Label end, int index) {
-        super.visitLocalVariable(name, descriptor, signature, start, end, index);
-        //获取方法的参数名
-        int i = index - 1;
-        // 如果是静态方法，则第一就是参数
-        // 如果不是静态方法，则第一个是"this"，然后才是方法的参数
-        if (isStaticMethod) {
-            i = index;
-        }
-        if (i >= 0 && i < argumentNames.length) {
-            argumentNames[i] = name;
-        }
-        LogHelper.log("visitLocalVariable name " + name + " descriptor " + descriptor + " i " + i + " index " + index);
-    }
-
-    @Override
     protected void onMethodEnter() {
         super.onMethodEnter();
+        if (methodName.equals("<init>()")) {
+            return;
+        }
         if (hasTraceLog || logAll) {
             methodId = newLocal(Type.INT_TYPE);
             mv.visitMethodInsn(INVOKESTATIC, LOG_CACHE_NAME, "request", "()I", false);
@@ -94,11 +80,15 @@ class HannoMethodAdapter extends AdviceAdapter {
             mv.visitVarInsn(opcode, index);
             box(type);
             mv.visitVarInsn(ILOAD, methodId);
-            LogHelper.log("onMethodEnter i " + i + " type " + type + " argumentNames " + argumentNames[i]);
-            if (argumentNames[i] == null) {
+            //通过class_method获取方法参数
+            VariableEntry entry = VariableCache.getVariable(className + "_" + methodName + "_" + index);
+            if (entry != null) {
+                LogHelper.log("onMethodEnter i " + i + " type " + type + " argumentNames " + entry.toString());
+            }
+            if (entry == null) {
                 mv.visitLdcInsn("null");
             } else {
-                mv.visitLdcInsn(argumentNames[i]);
+                mv.visitLdcInsn(entry.getName());
             }
             visitMethodInsn(INVOKESTATIC, LOG_CACHE_NAME, "addMethodArgument",
                     "(Ljava/lang/Object;ILjava/lang/String;)V", false);
@@ -118,7 +108,10 @@ class HannoMethodAdapter extends AdviceAdapter {
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
-        LogHelper.log("onMethodExit hasTraceLog " + hasTraceLog);
+        if (methodName.equals("<init>")) {
+            return;
+        }
+//        LogHelper.log("onMethodExit hasTraceLog " + hasTraceLog);
         if (hasTraceLog || logAll) {
 
             //保存处理一下field类型的参数值
@@ -145,7 +138,7 @@ class HannoMethodAdapter extends AdviceAdapter {
                     "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JI)V", false);
 
             mv.visitVarInsn(ILOAD, methodId);
-            LogHelper.log("methodId------- " + methodId);
+//            LogHelper.log("methodId------- " + methodId);
             mv.visitLdcInsn(level);
             mv.visitLdcInsn(enableTime);
             mv.visitLdcInsn(tagName);
@@ -171,7 +164,7 @@ class HannoMethodAdapter extends AdviceAdapter {
                 mv.visitLdcInsn(info.descriptor);
                 mv.visitMethodInsn(INVOKESTATIC, LOG_CACHE_NAME,
                         "setFieldValues", "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V", false);
-                LogHelper.log("handleFieldInfos " + "store code " + info.getStoreCode() + " load code " + info.getLoadCode());
+//                LogHelper.log("handleFieldInfos " + "store code " + info.getStoreCode() + " load code " + info.getLoadCode());
             }
         }
     }
@@ -184,7 +177,7 @@ class HannoMethodAdapter extends AdviceAdapter {
 
         @Override
         public void visit(String name, Object value) {
-            LogHelper.log("HannoAnnotationVisitor visit name " + name + " value " + value + " className " + className);
+//            LogHelper.log("HannoAnnotationVisitor visit name " + name + " value " + value + " className " + className);
             switch (name) {
                 case "level":
                     level = Integer.parseInt(value.toString());

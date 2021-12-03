@@ -3,7 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.hanking.hanno'
 hannoExtension{
-    enable=false
+    enable=true
+    openLog=true
 }
 android {
     compileSdkVersion 29
