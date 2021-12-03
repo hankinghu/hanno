@@ -73,19 +73,21 @@ class MainActivity : AppCompatActivity() {
 ```
 打印的log内容如下：
 ```java
-/*
-2021-11-29 11:07:26.591 29307-29307/com.hank.hanno D/test: ┌───────────────────────────────────------───────────────────────────────────------
-2021-11-29 11:07:26.591 29307-29307/com.hank.hanno D/test: │ 执行的方法为: onResume()
-2021-11-29 11:07:26.591 29307-29307/com.hank.hanno D/test: │ 方法的参数值: []
-2021-11-29 11:07:26.592 29307-29307/com.hank.hanno D/test: │ {descriptor='I', name='a', value=3}
-2021-11-29 11:07:26.592 29307-29307/com.hank.hanno D/test: │ {descriptor='Z', name='b', value=false}
-2021-11-29 11:07:26.592 29307-29307/com.hank.hanno D/test: │ {descriptor='Ljava/lang/String;', name='c', value=ccc}
-2021-11-29 11:07:26.594 29307-29307/com.hank.hanno D/test: │ 方法运行的线程为: main
-2021-11-29 11:07:26.594 29307-29307/com.hank.hanno D/test: └───────────────────────────────────------───────────────────────────────────------
-*/
+ //D/test: ┌───────────────────────────────────------───────────────────────────────────------
+ //D/test: │ method: onResume()
+ //D/test: │ fields: {name='a', value=3}{name='b', value=false}{name='c', value=ccc}
+ //D/test: │ thread: main
+ //D/test: └───────────────────────────────────------───────────────────────────────────------
+
+ //D/MainActivity: ┌───────────────────────────────────------───────────────────────────────────------
+ //D/MainActivity: │ method: onCreate(android.os.Bundle)
+ //D/MainActivity: │ params: [{name='savedInstanceState', value=null}]
+ //D/MainActivity: │ time: 22ms
+ //D/MainActivity: │ fields: {name='a', value=3}{name='b', value=false}{name='c', value=ccc}
+ //D/MainActivity: │ thread: main
+ //D/MainActivity: └───────────────────────────────────------───────────────────────────────────------
+
 ```
-![图片](https://github.com/hankinghu/hanno/raw/master/pic/log1.png)
-![图片](https://github.com/hankinghu/hanno/raw/master/pic/log2.png)
 
 # HannoLog参数解释
 可以通过level来设置log的级别，level的设置可以调用Log里面的INFO，DEBUG，ERROR等。enableTime用来设置是否打印方法执行的时间，默认是false，如果要打印设置enableTime=true.
@@ -127,15 +129,6 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 类中所有的方法都会打印出log
-
-![图片](https://github.com/hankinghu/hanno/raw/master/pic/log3.png)
-
-# 添加依赖
-在项目的build.gradle文件中添加
-classpath "com.hanking.hanno:hannoPlugin:0.0.1-alpha.0"
-在module中添加
-apply plugin: 'com.hanking.hanno'
-implementation "com.hanking.hanno:hannotation:0.0.1-alpha.0"
 
 # 是否开启plugin 和打印执行plugin的log
 默认情况下添加HannoLog之后会进行asm插装，也可以通过在module的build.gradle文件中添加以下配置使在编译时不执行字节码插装提高编译速度
