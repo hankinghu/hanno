@@ -33,4 +33,10 @@ public @interface HannoLog {
      */
     boolean watchField() default false;
 
+    /**
+     *
+     * @return 是否观察方法的调用栈
+     */
+    boolean watchStack() default false;
+
 }

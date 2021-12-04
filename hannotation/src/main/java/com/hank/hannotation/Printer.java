@@ -30,7 +30,7 @@ public class Printer {
     /**
      * 此处添加同步，防止多线程调用是log打印错误
      */
-    public static synchronized void printMethodInfo(MethodInfo methodInfo, int level, boolean enableTime, String tagName, Vector<FieldInfoN> fieldInfoNS) {
+    public static synchronized void printMethodInfo(MethodInfo methodInfo, int level, boolean enableTime, String tagName, Vector<FieldInfoN> fieldInfoNS, boolean watchStack) {
         String TAG = tagName.isEmpty() ? methodInfo.getClassName() : tagName;
         Log.println(level, TAG, TOP_BORDER);
         Log.println(level, TAG, String.format(METHOD_NAME_FORMAT, HORIZONTAL_LINE, methodInfo.getMethodName()));
@@ -55,5 +55,9 @@ public class Printer {
         }
         Log.println(level, TAG, String.format(Locale.CHINA, RUN_THREAD_FORMAT, HORIZONTAL_LINE, Thread.currentThread().getName()));
         Log.println(level, TAG, BOTTOM_BORDER);
+        //watch stack,打印方法的调用栈
+        if (watchStack) {
+            Log.println(level, TAG, Log.getStackTraceString(new Throwable()));
+        }
     }
 }

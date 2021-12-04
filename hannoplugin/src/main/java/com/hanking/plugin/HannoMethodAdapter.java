@@ -38,6 +38,7 @@ class HannoMethodAdapter extends AdviceAdapter {
     private String tagName = "";
     private final Vector<FieldInfo> fieldInfos;
     private boolean watchField = false;
+    private boolean watchStack = false;
 
     protected HannoMethodAdapter(int api, MethodVisitor methodVisitor, int access, String name, String descriptor, String className, boolean logAll, Vector<FieldInfo> fieldInfos) {
         super(api, methodVisitor, access, name, descriptor);
@@ -142,8 +143,9 @@ class HannoMethodAdapter extends AdviceAdapter {
             mv.visitLdcInsn(level);
             mv.visitLdcInsn(enableTime);
             mv.visitLdcInsn(tagName);
+            mv.visitLdcInsn(watchStack);
             mv.visitMethodInsn(INVOKESTATIC, LOG_CACHE_NAME,
-                    "printMethodInfo", "(IIZLjava/lang/String;)V", false);
+                    "printMethodInfo", "(IIZLjava/lang/String;Z)V", false);
 
         }
     }
@@ -190,6 +192,8 @@ class HannoMethodAdapter extends AdviceAdapter {
                     break;
                 case "watchField":
                     watchField = Boolean.parseBoolean(value.toString());
+                case "watchStack":
+                    watchStack = Boolean.parseBoolean(value.toString());
 
             }
             super.visit(name, value);

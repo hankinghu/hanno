@@ -42,9 +42,9 @@ public class LogCache {
         methodInfo.setMethodName(methodName);
     }
 
-    public static synchronized void printMethodInfo(int id, int logLevel, boolean enableTime, String tagName) {
+    public static synchronized void printMethodInfo(int id, int logLevel, boolean enableTime, String tagName,boolean watchStack) {
         MethodInfo methodInfo = mCacheMethods.get(id);
-        Printer.printMethodInfo(methodInfo, logLevel, enableTime, tagName, mCacheFields);
+        Printer.printMethodInfo(methodInfo, logLevel, enableTime, tagName, mCacheFields,watchStack);
     }
 
     /**
