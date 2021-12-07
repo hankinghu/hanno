@@ -176,3 +176,24 @@ java -jar  /Users/hanking/AndroidStudioProjects/Honno/cfr/cfr-0.151.jar  MainAct
 ```
 # 实现原理
 asm字节码原理
+
+# 项目中依赖
+在项目的build.gradle中添加
+``` groovy
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "io.github.hankinghu:hannoplugin:1.1.5"
+  }
+}
+```
+
+在需要依赖的子module中添加
+
+```
+apply plugin: "io.github.hankinghu.plugin"
+```
