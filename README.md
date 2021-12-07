@@ -192,7 +192,7 @@ buildscript {
 }
 ```
 
-在需要依赖的子module中添加
+在需要依赖的子module的build.gradle中添加
 
 ```groovy
 apply plugin: "io.github.hankinghu.plugin"
