@@ -200,4 +200,5 @@ buildscript {
 apply plugin: "io.github.hankinghu.plugin"
 implementation 'com.github.hankinghu:hanno:1.1.5'
 ```
+[![](https://jitpack.io/v/hankinghu/hanno.svg)](https://jitpack.io/#hankinghu/hanno)
 
