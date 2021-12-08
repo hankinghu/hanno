@@ -197,3 +197,17 @@ buildscript {
 ```groovy
 apply plugin: "io.github.hankinghu.plugin"
 ```
+//---hanno
+```
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+```
+	dependencies {
+	        implementation 'com.github.hankinghu:hanno:Tag'
+	}
+ ```
