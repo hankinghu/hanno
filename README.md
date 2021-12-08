@@ -197,8 +197,8 @@ buildscript {
 ```groovy
 apply plugin: "io.github.hankinghu.plugin"
 ```
-//---hanno
-```
+
+```groovy
 	allprojects {
 		repositories {
 			...
@@ -206,7 +206,7 @@ apply plugin: "io.github.hankinghu.plugin"
 		}
 	}
 ```
-```
+```groovy
 	dependencies {
 	        implementation 'com.github.hankinghu:hanno:Tag'
 	}
