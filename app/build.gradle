@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.hanking.hanno'
+//apply plugin: 'com.hanking.hanno'
 hannoExtension{
     enable=true
     openLog=true
