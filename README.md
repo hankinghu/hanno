@@ -185,9 +185,11 @@ buildscript {
     maven {
       url "https://plugins.gradle.org/m2/"
     }
+    maven { url 'https://jitpack.io' }
   }
   dependencies {
     classpath "io.github.hankinghu:hannoplugin:1.1.5"
+    
   }
 }
 ```
@@ -196,4 +198,7 @@ buildscript {
 
 ```groovy
 apply plugin: "io.github.hankinghu.plugin"
+implementation 'com.github.hankinghu:hanno:1.1.5'
 ```
+[![](https://jitpack.io/v/hankinghu/hanno.svg)](https://jitpack.io/#hankinghu/hanno)
+
